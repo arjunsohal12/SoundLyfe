@@ -1,0 +1,146 @@
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import RoomList from './RoomList';
+import ChatForm from './ChatForm';
+import Conversation from './Conversation';
+import Navigation from './Navigation';
+import SearchRooms from './SearchRooms';
+import { useChat } from '../context/ChatProvider';
+import { Description } from '../styled/Description';
+import { useTheme } from "@mui/material";
+import Navbar from 'scenes/navbar';
+import Box from '@mui/material';
+import { useSelector } from 'react-redux';
+import useChatActions from 'hooks/useChatActions';
+const ChatAppContainer = styled.div`
+    --vertical-padding: 3vh;
+
+    display: flex;
+    gap: 2vw;
+    height: 100%;
+    width: 100%;
+    padding: 0 0 0 0rem
+    justify-content: space-between;
+    background: #0A0A0A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+                rgba(0, 0, 0, 0.12) 0px -12px 30px,
+                rgba(0, 0, 0, 0.12) 0px 4px 6px,
+                rgba(0, 0, 0, 0.17) 0px 12px 13px,
+                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+    @media (max-width: 820px) {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        flex-direction: column-reverse;
+        font-size: 0.85rem;
+        gap: 0;
+    }
+`;
+
+const CenterContainer = styled.div`
+    display: flex;
+    flex: 1;
+    gap: 1.5vw;
+    flex-direction: column;
+    height: 100%;
+    margin: auto 0;
+    padding: 1.5vw 0vw;
+
+    @media (max-width: 820px) {
+        height: 80%;
+    }
+    
+`;
+
+const Chat = styled.div`
+    padding: var(--vertical-padding) var(--vertical-padding) 1.5vh var(--vertical-padding);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 80%;
+    background: #1A1A1A;
+    border-radius: 30px;
+
+    @media (max-width: 820px) {
+        margin: 0 2.5vw;
+    }
+`;
+
+const Header = styled.header`
+    display: flex;
+    align-items: center;
+    gap: 1.1em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 1em;
+    height: 3.2em;
+    background-color: #333333;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    height: 5rem;
+    & img {
+        height: 100%;
+        border-radius: 0.7em;
+    }
+
+    & h2 {
+        font-size: 0.85em;
+        font-weight: 600;
+        color: white;
+    }
+`;
+
+const WelcomeMessage = styled.p`
+    margin: auto 0;
+    font-size: 0.9em;
+    text-align: center;
+    color: white;
+`;
+
+const ChatContainer = () => {
+    const [query, setQuery] = useState('');
+    const [isNavOpen, setIsNavOpen] = useState();
+    const currentRoom = useSelector((state) => state.chatData.currentChat)
+
+    return (
+        <ChatAppContainer>
+            <Navigation openRoomNav={ () => setIsNavOpen(true) } />
+
+            <CenterContainer>
+                {/* <SearchRooms query={ query } setQuery={ setQuery } /> */}
+
+                <Chat>
+                    {
+                        ! currentRoom ? 
+                        
+                        <WelcomeMessage>Come join the fun! <br/> Chat with friends or meet new ones in one of our lively chat rooms.<br/> See you there! 🙋🏽‍♂️</WelcomeMessage>
+                        :
+                        <>
+                            <Header >
+                                <img alt='room-img' src={ currentRoom.picturePath } />
+
+                                <div>
+                                    <h2>{ currentRoom.name }</h2>
+                                    <Description color='#00D5FA' size='0.75em'>Start Chatting!</Description>
+                                </div>
+                            </Header>
+                            
+                            <Conversation />
+            
+                            <ChatForm />
+                        </>
+
+                    }
+                </Chat>
+            </CenterContainer>
+
+            <RoomList 
+                query={ query }
+                isNavOpen={ isNavOpen }
+                setIsNavOpen={ setIsNavOpen }
+            />
+        </ChatAppContainer>
+);
+};
+
+export default ChatContainer;

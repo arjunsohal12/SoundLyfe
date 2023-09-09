@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.3",
+    "redis": "^4.6.7",
+    "socket.io": "^4.6.0",
+    "uuid": "^9.0.0"
+  },
+  "scripts": {
+    "start": "node --watch server.js"
+  },
+  "type": "module"
+
+}
